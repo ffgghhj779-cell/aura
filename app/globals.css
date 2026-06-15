@@ -326,6 +326,82 @@ input:focus-visible {
   min-height: clamp(26rem, 55vh, 32rem);
 }
 
+/* ─── 4K / Retina sharpness ─── */
+.retina-sharp {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: geometricPrecision;
+}
+
+.retina-sharp img,
+.retina-sharp svg {
+  image-rendering: -webkit-optimize-contrast;
+}
+
+/* ─── Catalog grid ─── */
+.catalog-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(1rem, 3vw, 2rem);
+}
+
+@media (min-width: 640px) {
+  .catalog-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .catalog-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1280px) {
+  .catalog-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* ─── Collection cards ─── */
+.collection-card {
+  transform: translateZ(0);
+  transition: transform 0.4s var(--ease-premium);
+}
+
+.collection-card:hover,
+.collection-card:focus-visible {
+  transform: translate3d(0, -4px, 0) scale(1.01);
+}
+
+.collection-card img {
+  transition: opacity 0.4s var(--ease-premium);
+}
+
+/* ─── Nav links ─── */
+.nav-link {
+  border-radius: 0;
+}
+
+.site-header {
+  backdrop-filter: blur(12px);
+  background: rgb(0 0 0 / 0.95);
+}
+
+/* ─── Filter pills ─── */
+.filter-pill {
+  transition: transform 0.08s var(--ease-snappy);
+}
+
+.filter-pill:active {
+  transform: scale(0.97);
+}
+
+/* ─── Scroll anchor offset for sticky header ─── */
+.scroll-mt-24 {
+  scroll-margin-top: 5.5rem;
+}
+
 /* ─── Reduced motion ─── */
 @media (prefers-reduced-motion: reduce) {
   html {
