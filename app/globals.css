@@ -4,47 +4,36 @@
   --font-display: var(--font-display);
   --font-sans: var(--font-sans);
 
+  --ease-premium: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-snappy: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-touch: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
   --animate-marquee: marquee 35s linear infinite;
-  --animate-marquee-reverse: marquee-reverse 35s linear infinite;
-  --animate-fade-up: fade-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-  --animate-pulse-soft: pulse-soft 2.5s ease-in-out infinite;
+  --animate-pulse-soft: pulse-soft 2.5s var(--ease-premium) infinite;
 
   @keyframes marquee {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
-  }
-
-  @keyframes marquee-reverse {
-    0% { transform: translateX(-50%); }
-    100% { transform: translateX(0); }
-  }
-
-  @keyframes fade-up {
-    from {
-      opacity: 0;
-      transform: translateY(16px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    0% { transform: translate3d(0, 0, 0); }
+    100% { transform: translate3d(-50%, 0, 0); }
   }
 
   @keyframes pulse-soft {
-    0%, 100% { opacity: 0.4; }
+    0%, 100% { opacity: 0.35; }
     50% { opacity: 1; }
   }
 }
 
-/* Base polish */
+/* ─── Performance base ─── */
 html {
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-size-adjust: 100%;
 }
 
 body {
   text-rendering: optimizeLegibility;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 ::selection {
@@ -56,57 +45,267 @@ body {
   font-family: var(--font-display), system-ui, sans-serif;
 }
 
-/* Marquee — pause on hover for premium feel */
+/* Force GPU compositing on animated layers */
+.gpu-layer {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  will-change: transform, opacity;
+}
+
+.gpu-layer--idle {
+  will-change: auto;
+}
+
+/* ─── Spacing tokens (mobile-first, rem/clamp) ─── */
+.section-x {
+  padding-inline: clamp(1.25rem, 4vw, 3rem);
+}
+
+.section-y {
+  padding-block: clamp(2.5rem, 6vw, 5rem);
+}
+
+.stack-gap {
+  gap: clamp(0.875rem, 2.5vw, 1.5rem);
+}
+
+/* ─── Touch targets (48–56px minimum) ─── */
+.touch-target {
+  min-height: 3.5rem;
+  min-width: 3.5rem;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.08s var(--ease-snappy);
+}
+
+.touch-target:active {
+  transform: scale(0.97);
+}
+
+/* ─── Marquee (transform-only, GPU) ─── */
 .marquee-track {
   display: flex;
   width: max-content;
   animation: var(--animate-marquee);
-}
-
-.marquee-track:hover {
-  animation-play-state: paused;
+  will-change: transform;
+  transform: translateZ(0);
 }
 
 .marquee-group {
   display: flex;
   align-items: center;
-  gap: 3rem;
-  padding-right: 3rem;
+  gap: clamp(2rem, 5vw, 3rem);
+  padding-right: clamp(2rem, 5vw, 3rem);
   flex-shrink: 0;
 }
 
-/* Premium button interactions */
+/* ─── Premium buttons (transform + opacity only) ─── */
 .btn-premium {
   position: relative;
   overflow: hidden;
-  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
-              box-shadow 0.25s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.btn-premium:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 8px 24px -8px rgba(0, 0, 0, 0.35);
+  min-height: 3.5rem;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.08s var(--ease-snappy);
 }
 
 .btn-premium:active {
-  transform: translateY(0) scale(0.98);
-  box-shadow: none;
+  transform: scale(0.97);
 }
 
-/* Product card shadow transition */
+.btn-premium__fill {
+  position: absolute;
+  inset: 0;
+  background: #DFFF00;
+  transform: translate3d(0, 100%, 0);
+  transition: transform 0.28s var(--ease-premium);
+  will-change: transform;
+}
+
+.btn-premium:hover .btn-premium__fill,
+.btn-premium:focus-visible .btn-premium__fill {
+  transform: translate3d(0, 0, 0);
+}
+
+/* ─── Product cards (transform + opacity only) ─── */
 .product-card {
-  transition:
-    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 0.5s cubic-bezier(0.22, 1, 0.36, 1),
-    border-color 0.3s ease;
+  contain: layout style;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.4s var(--ease-premium), opacity 0.4s var(--ease-premium);
+  transform: translateZ(0);
 }
 
-.product-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 24px 48px -16px rgba(0, 0, 0, 0.14);
+.product-card:hover,
+.product-card:focus-within {
+  transform: translate3d(0, -4px, 0) scale(1.005);
 }
 
-/* Focus rings for production accessibility */
+.product-card__image-wrap {
+  aspect-ratio: 4 / 5;
+  contain: strict;
+  overflow: hidden;
+  background: #f3f4f6;
+}
+
+.product-card__image {
+  transition: transform 0.5s var(--ease-premium);
+  will-change: transform;
+  transform: translateZ(0) scale(1);
+}
+
+.product-card:hover .product-card__image,
+.product-card:focus-within .product-card__image {
+  transform: translateZ(0) scale(1.04);
+}
+
+.product-card__border-glow {
+  position: absolute;
+  inset: 0;
+  border: 2px solid #000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s var(--ease-premium);
+}
+
+.product-card:hover .product-card__border-glow,
+.product-card:focus-within .product-card__border-glow {
+  opacity: 1;
+}
+
+/* ─── Mood buttons (compositor-only hover) ─── */
+.mood-btn {
+  position: relative;
+  min-height: 3.5rem;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  contain: layout style;
+  transition: transform 0.08s var(--ease-snappy);
+  transform: translateZ(0);
+}
+
+.mood-btn:active {
+  transform: scale(0.97);
+}
+
+.mood-btn__yellow {
+  position: absolute;
+  inset: 0;
+  background: #DFFF00;
+  transform: scale3d(0, 1, 1);
+  transform-origin: left center;
+  transition: transform 0.45s var(--ease-premium);
+  will-change: transform;
+}
+
+.mood-btn:hover .mood-btn__yellow,
+.mood-btn:focus-visible .mood-btn__yellow {
+  transform: scale3d(1, 1, 1);
+}
+
+.mood-btn__dark {
+  position: absolute;
+  inset: 0;
+  background: #000;
+  opacity: 0;
+  transition: opacity 0.35s var(--ease-premium);
+  will-change: opacity;
+}
+
+.mood-btn:hover .mood-btn__dark,
+.mood-btn:focus-visible .mood-btn__dark {
+  opacity: 1;
+}
+
+.mood-btn__content {
+  position: relative;
+  z-index: 1;
+}
+
+.mood-btn__arrow {
+  opacity: 0;
+  transform: translate3d(-1rem, 0, 0);
+  transition: transform 0.3s var(--ease-premium), opacity 0.3s var(--ease-premium);
+  will-change: transform, opacity;
+}
+
+.mood-btn:hover .mood-btn__arrow,
+.mood-btn:focus-visible .mood-btn__arrow {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+/* ─── Pillar cards (opacity border overlay) ─── */
+.pillar-card {
+  position: relative;
+  contain: layout style;
+}
+
+.pillar-card__accent {
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgb(223 255 0 / 0.5);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s var(--ease-premium);
+}
+
+.pillar-card:hover .pillar-card__accent,
+.pillar-card:focus-within .pillar-card__accent {
+  opacity: 1;
+}
+
+.pillar-card__number {
+  transition: opacity 0.35s var(--ease-premium);
+}
+
+.pillar-card:hover .pillar-card__number,
+.pillar-card:focus-within .pillar-card__number {
+  opacity: 0.35;
+}
+
+/* ─── Product stack (mobile flex, desktop grid) ─── */
+.product-stack {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1rem, 3vw, 2rem);
+}
+
+@media (min-width: 640px) {
+  .product-stack {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .product-stack {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* ─── Mood grid (stack on mobile) ─── */
+.mood-stack {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.75rem, 2vw, 1.5rem);
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .mood-stack {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* ─── Scroll indicator (opacity only) ─── */
+.scroll-indicator {
+  animation: var(--animate-pulse-soft);
+  will-change: opacity;
+}
+
+/* ─── Focus rings ─── */
 a:focus-visible,
 button:focus-visible,
 input:focus-visible {
@@ -114,14 +313,31 @@ input:focus-visible {
   outline-offset: 2px;
 }
 
-/* Scroll indicator */
-.scroll-indicator {
-  animation: var(--animate-pulse-soft);
+/* ─── Typography clamp ─── */
+.hero-headline {
+  font-size: clamp(2.25rem, 8vw, 4.5rem);
 }
 
+.quiz-headline {
+  font-size: clamp(2.75rem, 11vw, 6.875rem);
+}
+
+.hero-min-h {
+  min-height: clamp(26rem, 55vh, 32rem);
+}
+
+/* ─── Reduced motion ─── */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 
   .marquee-track,
@@ -129,22 +345,7 @@ input:focus-visible {
     animation: none;
   }
 
-  .product-card:hover {
-    transform: none;
-  }
-
-  .btn-premium:hover {
-    transform: none;
-    box-shadow: none;
-  }
-}
-
-@media (max-width: 639px) {
-  .hero-headline {
-    font-size: clamp(2.25rem, 10vw, 3.5rem);
-  }
-
-  .quiz-headline {
-    font-size: clamp(2.75rem, 12vw, 4.5rem);
+  .gpu-layer {
+    will-change: auto;
   }
 }

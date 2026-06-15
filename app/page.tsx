@@ -1,14 +1,27 @@
 'use client';
 
-import { useState } from 'react';
+import { memo, useCallback, useState } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'motion/react';
 import { Activity, BatteryCharging, Focus, Waves, ShoppingBag, ArrowRight } from 'lucide-react';
 
 type MoodId = 'tense' | 'energetic' | 'steady' | 'tired';
 
-const SSS_YELLOW = '#DFFF00'; 
-const SSS_BLACK = '#000000';
+type Product = {
+  name: string;
+  desc: string;
+  image: string;
+  price: string;
+};
+
+type MoodResult = {
+  phrase: string;
+  products: Product[];
+};
+
+const PREMIUM_EASE = [0.22, 1, 0.36, 1] as const;
+const ONBOARDING_TRANSITION = { duration: 0.5, ease: PREMIUM_EASE };
+const RESULT_TRANSITION = { duration: 0.6, ease: PREMIUM_EASE };
 
 const MOODS: { id: MoodId; title: string; subtitle: string; icon: React.ReactNode }[] = [
   { 
@@ -149,22 +162,153 @@ const PRODUCT_ENGINE = {
   },
 };
 
+const ProductCard = memo(function ProductCard({
+  product,
+  index,
+}: {
+  product: Product;
+  index: number;
+}) {
+  return (
+    <motion.article
+      initial={{ opacity: 0, y: 24, scale: 0.97 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ duration: 0.45, delay: 0.15 + index * 0.08, ease: PREMIUM_EASE }}
+      className="product-card gpu-layer group relative flex flex-col border border-gray-200 bg-white"
+      style={{ willChange: 'transform, opacity' }}
+    >
+      <div className="product-card__border-glow" aria-hidden="true" />
+      <div className="product-card__image-wrap relative">
+        <Image
+          src={product.image}
+          alt={product.name}
+          fill
+          loading="lazy"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          className="product-card__image object-cover"
+          referrerPolicy="no-referrer"
+        />
+        {index === 0 && (
+          <div className="absolute top-4 left-4 bg-[#DFFF00] text-black text-[10px] sm:text-xs font-black uppercase tracking-widest px-3 py-1">
+            Top Pick
+          </div>
+        )}
+      </div>
+      <div className="p-5 sm:p-6 flex flex-col flex-1 bg-white">
+        <div className="flex justify-between items-start gap-3 mb-3">
+          <h4 className="font-display font-black text-base sm:text-xl uppercase tracking-tight leading-tight text-left">
+            {product.name}
+          </h4>
+          <span className="font-bold whitespace-nowrap text-sm sm:text-base shrink-0">{product.price}</span>
+        </div>
+        <p className="text-xs sm:text-sm text-gray-500 font-medium mb-6 leading-relaxed text-left">
+          {product.desc}
+        </p>
+        <div className="mt-auto">
+          <button
+            type="button"
+            className="btn-premium touch-target w-full relative overflow-hidden bg-black text-white font-black text-xs sm:text-sm uppercase tracking-widest py-4 border-2 border-black hover:text-black"
+          >
+            <span className="relative z-10 flex items-center justify-center gap-2">
+              Add to Cart
+              <ShoppingBag className="w-4 h-4" />
+            </span>
+            <span className="btn-premium__fill" aria-hidden="true" />
+          </button>
+        </div>
+      </div>
+    </motion.article>
+  );
+});
+
+const MoodResults = memo(function MoodResults({
+  result,
+  onReset,
+}: {
+  result: MoodResult;
+  onReset: () => void;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 40 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -40 }}
+      transition={RESULT_TRANSITION}
+      className="w-full gpu-layer"
+      style={{ willChange: 'transform, opacity' }}
+    >
+      <div className="bg-black text-white section-x section-y w-full">
+        <div className="max-w-6xl mx-auto flex flex-col items-center text-center">
+          <div className="inline-block bg-[#DFFF00] text-black px-4 py-1 font-bold text-xs sm:text-sm tracking-widest uppercase mb-6 sm:mb-8">
+            Your Rx
+          </div>
+          <h2 className="font-display font-black text-4xl sm:text-5xl md:text-7xl uppercase tracking-tighter leading-[1.05] whitespace-pre-line max-w-4xl mx-auto">
+            {result.phrase}
+          </h2>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto section-x py-12 sm:py-20">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4 mb-10 sm:mb-12 border-b-2 border-black pb-4">
+          <h3 className="font-display font-black text-2xl sm:text-3xl md:text-4xl uppercase tracking-tight">
+            Recommended Equipment
+          </h3>
+          <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">
+            Curated for your mood
+          </span>
+        </div>
+
+        <div className="product-stack">
+          {result.products.map((product, idx) => (
+            <ProductCard key={product.name} product={product} index={idx} />
+          ))}
+        </div>
+
+        <div className="mt-12 sm:mt-16 flex justify-center">
+          <button
+            type="button"
+            onClick={onReset}
+            className="btn-premium touch-target group relative flex items-center gap-3 bg-black text-white px-8 sm:px-10 py-4 sm:py-5 font-black uppercase text-sm tracking-widest border-2 border-black hover:bg-[#DFFF00] hover:text-black"
+          >
+            <svg
+              className="w-5 h-5 rotate-180 group-hover:-translate-x-1 transition-transform duration-300"
+              style={{ transitionTimingFunction: 'cubic-bezier(0.22, 1, 0.36, 1)' }}
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth="2"
+              aria-hidden="true"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+            Retake Quiz
+          </button>
+        </div>
+      </div>
+    </motion.div>
+  );
+});
+
 export default function AppPage() {
   const [selectedMood, setSelectedMood] = useState<MoodId | null>(null);
 
-  const handleReset = () => {
+  const handleReset = useCallback(() => {
     setSelectedMood(null);
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+  }, []);
+
+  const handleMoodSelect = useCallback((moodId: MoodId) => {
+    setSelectedMood(moodId);
+  }, []);
 
   const currentResult = selectedMood ? PRODUCT_ENGINE[selectedMood] : null;
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
       {/* Premium Athletic Navigation Bar */}
-      <nav className="w-full bg-black text-white h-[72px] flex items-center justify-between px-6 lg:px-12 sticky top-0 z-50">
+      <nav className="w-full bg-black text-white min-h-[4.5rem] flex items-center justify-between section-x sticky top-0 z-50">
         <div className="flex items-center gap-3">
-          <svg className="w-8 h-8 text-[#DFFF00]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <svg className="w-8 h-8 text-[#DFFF00]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <circle cx="12" cy="6" r="3" />
             <path d="M12 9v4" />
             <path d="M9 13l3 3 3-3" />
@@ -181,8 +325,8 @@ export default function AppPage() {
           </div>
         </div>
         <div className="flex items-center gap-6">
-          <button type="button" aria-label="Shopping cart" className="relative group p-1">
-            <ShoppingBag className="w-6 h-6 transition-all duration-300 group-hover:text-[#DFFF00] group-hover:scale-110" />
+          <button type="button" aria-label="Shopping cart" className="touch-target relative flex items-center justify-center p-2">
+            <ShoppingBag className="w-6 h-6" />
           </button>
         </div>
       </nav>
@@ -190,16 +334,17 @@ export default function AppPage() {
       <main className="flex-1 flex flex-col relative overflow-hidden">
         <AnimatePresence mode="wait">
           {!selectedMood && (
-            <motion.div 
+            <motion.div
               key="onboarding"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -40, filter: 'blur(4px)' }}
-              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-              className="w-full flex flex-col items-center"
+              exit={{ opacity: 0, y: -40 }}
+              transition={ONBOARDING_TRANSITION}
+              className="w-full flex flex-col items-center gpu-layer"
+              style={{ willChange: 'transform, opacity' }}
             >
               {/* Premium Hero Section */}
-              <div className="relative w-full h-[55vh] sm:h-[60vh] min-h-[420px] sm:min-h-[500px] flex items-center justify-center bg-black overflow-hidden">
+              <div className="relative w-full hero-min-h sm:h-[60vh] flex items-center justify-center bg-black overflow-hidden">
                 <Image
                   src="https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?w=1920&q=85"
                   alt="Saudi athlete training at elite performance level"
@@ -214,7 +359,7 @@ export default function AppPage() {
                   <span className="inline-block px-4 py-1.5 mb-5 sm:mb-6 text-[10px] sm:text-xs font-black tracking-[0.25em] sm:tracking-[0.3em] text-black uppercase bg-[#DFFF00]">
                     Motivation Aura
                   </span>
-                  <h2 className="hero-headline font-display font-black text-4xl sm:text-5xl md:text-7xl uppercase tracking-tighter mb-5 sm:mb-6 leading-[1.05]">
+                  <h2 className="hero-headline font-display font-black uppercase tracking-tighter mb-5 sm:mb-6 leading-[1.05]">
                     Train Your Mind.<br className="hidden sm:block" /> Elevate Your Game.
                   </h2>
                   <p className="text-gray-300 text-base sm:text-lg md:text-xl font-medium tracking-wide max-w-2xl mx-auto leading-relaxed px-2">
@@ -246,7 +391,7 @@ export default function AppPage() {
               </div>
 
               {/* Aura Philosophy */}
-              <section className="w-full bg-black text-white py-16 sm:py-20 px-6 lg:px-12">
+              <section className="w-full bg-black text-white section-y section-x">
                 <div className="max-w-6xl mx-auto">
                   <div className="text-center mb-12 sm:mb-16">
                     <span className="text-[10px] font-black tracking-[0.3em] uppercase text-[#DFFF00] mb-4 block">
@@ -256,13 +401,14 @@ export default function AppPage() {
                       Performance Starts Within
                     </h3>
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+                  <div className="flex flex-col md:grid md:grid-cols-3 stack-gap">
                     {AURA_PILLARS.map((pillar, idx) => (
                       <div
                         key={pillar.title}
-                        className="group border border-white/10 p-6 sm:p-8 hover:border-[#DFFF00]/50 transition-colors duration-500"
+                        className="pillar-card border border-white/10 p-6 sm:p-8"
                       >
-                        <span className="font-display font-black text-5xl text-white/10 group-hover:text-[#DFFF00]/30 transition-colors duration-500">
+                        <span className="pillar-card__accent" aria-hidden="true" />
+                        <span className="pillar-card__number font-display font-black text-5xl text-[#DFFF00]/20 block">
                           0{idx + 1}
                         </span>
                         <h4 className="font-display font-black text-xl uppercase tracking-tight mt-4 mb-3">
@@ -298,11 +444,11 @@ export default function AppPage() {
                 </div>
               </div>
 
-              <div className="max-w-6xl w-full mx-auto px-6 lg:px-12 flex flex-col items-center text-center pt-16 sm:pt-20 lg:pt-24 pb-16 sm:pb-24">
+              <div className="max-w-6xl w-full mx-auto section-x flex flex-col items-center text-center section-y">
                 <span className="text-[10px] font-black tracking-[0.3em] uppercase text-gray-400 mb-6 block">
                   Your Mental Check-In
                 </span>
-                <h1 className="quiz-headline font-display font-black text-5xl md:text-8xl lg:text-[110px] leading-[0.9] uppercase tracking-tighter text-black flex flex-col">
+                <h1 className="quiz-headline font-display font-black leading-[0.9] uppercase tracking-tighter text-black flex flex-col">
                   <span className="block mb-2 text-gray-400">How do you</span>
                   <span className="block italic text-transparent bg-clip-text bg-gradient-to-br from-black to-gray-800">Feel Today?</span>
                 </h1>
@@ -312,142 +458,49 @@ export default function AppPage() {
                   <span className="absolute bottom-[-12px] left-1/2 -translate-x-1/2 w-12 h-1 bg-[#DFFF00]" />
                 </p>
 
-                <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 lg:gap-6 mt-12 sm:mt-20">
-                  {MOODS.map((mood, idx) => (
+                <div className="mood-stack mt-12 sm:mt-20">
+                  {MOODS.map((mood) => (
                     <button
                       key={mood.id}
                       type="button"
-                      onClick={() => setSelectedMood(mood.id)}
-                      className="group relative flex items-center p-5 sm:p-6 lg:p-8 border-2 border-black bg-white text-left transition-all duration-300 hover:bg-black hover:text-white active:scale-[0.99]"
+                      onClick={() => handleMoodSelect(mood.id)}
+                      className="mood-btn gpu-layer group relative flex items-center p-5 sm:p-6 lg:p-8 border-2 border-black bg-white text-left"
                     >
-                     <div className="absolute top-0 left-0 w-full h-full bg-[#DFFF00] origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500 ease-[0.22,1,0.36,1] z-0"></div>
-                     <div className="relative z-10 flex w-full items-center gap-6">
-                        <div className="w-16 h-16 bg-gray-100 group-hover:bg-white text-black flex items-center justify-center shrink-0 transition-colors">
+                      <span className="mood-btn__yellow" aria-hidden="true" />
+                      <span className="mood-btn__dark" aria-hidden="true" />
+                      <div className="mood-btn__content flex w-full items-center gap-4 sm:gap-6 group-hover:text-white group-focus-visible:text-white">
+                        <div className="w-14 h-14 sm:w-16 sm:h-16 bg-gray-100 group-hover:bg-white group-focus-visible:bg-white text-black flex items-center justify-center shrink-0">
                           {mood.icon}
                         </div>
-                        <div className="flex-1">
-                          <div className="flex items-center space-x-3 mb-1">
-                            <span className="font-display font-black text-3xl uppercase tracking-tight">I&apos;m {mood.title}</span>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center mb-1">
+                            <span className="font-display font-black text-2xl sm:text-3xl uppercase tracking-tight">
+                              I&apos;m {mood.title}
+                            </span>
                           </div>
-                          <p className="text-gray-500 group-hover:text-black font-semibold uppercase tracking-wider text-xs">
+                          <p className="text-gray-500 group-hover:text-white/80 group-focus-visible:text-white/80 font-semibold uppercase tracking-wider text-xs">
                             — {mood.subtitle}
                           </p>
                         </div>
-                        <div className="w-12 h-12 flex items-center justify-center opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
-                           <ArrowRight className="w-8 h-8 text-black" />
+                        <div className="mood-btn__arrow w-12 h-12 flex items-center justify-center shrink-0">
+                          <ArrowRight className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
                         </div>
-                     </div>
-                  </button>
-                ))}
-              </div>
+                      </div>
+                    </button>
+                  ))}
+                </div>
               </div>
             </motion.div>
           )}
 
           {selectedMood && currentResult && (
-            <motion.div 
-              key="result"
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -40 }}
-              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-              className="w-full"
-            >
-              {/* Premium Hero Section */}
-              <div className="bg-black text-white px-6 py-16 sm:py-24 lg:py-32 w-full">
-                <div className="max-w-6xl mx-auto flex flex-col items-center text-center">
-                  <div className="inline-block bg-[#DFFF00] text-black px-4 py-1 font-bold text-xs sm:text-sm tracking-widest uppercase mb-6 sm:mb-8">
-                    Your Rx
-                  </div>
-                  <h2 className="font-display font-black text-4xl sm:text-5xl md:text-7xl uppercase tracking-tighter leading-[1.05] whitespace-pre-line max-w-4xl mx-auto">
-                    {currentResult.phrase}
-                  </h2>
-                </div>
-              </div>
-
-              {/* Product Shelf */}
-              <div className="max-w-7xl mx-auto px-6 lg:px-12 py-12 sm:py-20">
-                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4 mb-10 sm:mb-12 border-b-2 border-black pb-4">
-                  <h3 className="font-display font-black text-2xl sm:text-3xl md:text-4xl uppercase tracking-tight">
-                    Recommended Equipment
-                  </h3>
-                  <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">
-                    Curated for your mood
-                  </span>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-8">
-                  {currentResult.products.map((product, idx) => (
-                    <motion.div
-                      key={product.name}
-                      initial={{ opacity: 0, y: 30, scale: 0.96 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      transition={{ duration: 0.5, delay: 0.2 + idx * 0.1, ease: [0.22, 1, 0.36, 1] }}
-                      className="product-card group flex flex-col border border-gray-200 hover:border-black bg-white"
-                    >
-                      <div className="relative aspect-[4/5] bg-gray-100 overflow-hidden">
-                        <Image
-                          src={product.image}
-                          alt={product.name}
-                          fill
-                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                          className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                          referrerPolicy="no-referrer"
-                        />
-                        {idx === 0 && (
-                          <div className="absolute top-4 left-4 bg-[#DFFF00] text-black text-[10px] sm:text-xs font-black uppercase tracking-widest px-3 py-1 shadow-sm">
-                            Top Pick
-                          </div>
-                        )}
-                      </div>
-                      <div className="p-5 sm:p-6 flex flex-col flex-1 bg-white">
-                        <div className="flex justify-between items-start gap-3 mb-3">
-                          <h4 className="font-display font-black text-base sm:text-xl uppercase tracking-tight leading-tight text-left">
-                            {product.name}
-                          </h4>
-                          <span className="font-bold whitespace-nowrap text-sm sm:text-base shrink-0">{product.price}</span>
-                        </div>
-                        <p className="text-xs sm:text-sm text-gray-500 font-medium mb-6 leading-relaxed text-left">
-                          {product.desc}
-                        </p>
-
-                        <div className="mt-auto">
-                          <button
-                            type="button"
-                            className="btn-premium w-full relative overflow-hidden bg-black text-white font-black text-xs sm:text-sm uppercase tracking-widest py-4 border-2 border-black group/btn hover:text-black transition-colors duration-300"
-                          >
-                            <span className="relative z-10 flex items-center justify-center gap-2 transition-transform duration-300 group-hover/btn:scale-105">
-                              Add to Cart
-                              <ShoppingBag className="w-4 h-4" />
-                            </span>
-                            <div className="absolute inset-0 bg-[#DFFF00] translate-y-full group-hover/btn:translate-y-0 transition-transform duration-300 ease-out" />
-                          </button>
-                        </div>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-
-                <div className="mt-12 sm:mt-16 flex justify-center">
-                  <button
-                    type="button"
-                    onClick={handleReset}
-                    className="btn-premium group relative flex items-center gap-3 bg-black text-white px-8 sm:px-10 py-4 sm:py-5 font-black uppercase text-sm tracking-widest border-2 border-black hover:bg-[#DFFF00] hover:text-black transition-colors duration-300"
-                  >
-                    <svg className="w-5 h-5 rotate-180 group-hover:-translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                    </svg>
-                    Retake Quiz
-                  </button>
-                </div>
-              </div>
-            </motion.div>
+            <MoodResults key="result" result={currentResult} onReset={handleReset} />
           )}
         </AnimatePresence>
       </main>
 
       {/* Ultra-Premium Footer */}
-      <footer className="w-full bg-[#0a0a0a] text-white py-16 sm:py-20 px-6 lg:px-12 mt-auto border-t border-gray-900">
+      <footer className="w-full bg-[#0a0a0a] text-white section-y section-x mt-auto border-t border-gray-900">
         <div className="max-w-7xl mx-auto flex flex-col lg:flex-row justify-between items-start gap-12 lg:gap-20">
           <div className="flex flex-col max-w-sm">
             <div className="flex items-center gap-3 mb-6">
@@ -464,10 +517,10 @@ export default function AppPage() {
               Elevating the physical and mental state of the Saudi athlete with curated premium gear tailored to your exact frequency.
             </p>
             <div className="flex gap-3">
-              <button type="button" aria-label="Instagram" className="w-10 h-10 rounded-full border border-gray-800 flex items-center justify-center hover:bg-[#DFFF00] hover:text-black hover:border-[#DFFF00] transition-all duration-300 cursor-pointer text-gray-400 text-[10px] font-black">
+              <button type="button" aria-label="Instagram" className="touch-target w-12 h-12 rounded-full border border-gray-800 flex items-center justify-center hover:bg-[#DFFF00] hover:text-black hover:border-[#DFFF00] cursor-pointer text-gray-400 text-[10px] font-black">
                 IG
               </button>
-              <button type="button" aria-label="Twitter" className="w-10 h-10 rounded-full border border-gray-800 flex items-center justify-center hover:bg-[#DFFF00] hover:text-black hover:border-[#DFFF00] transition-all duration-300 cursor-pointer text-gray-400 text-[10px] font-black">
+              <button type="button" aria-label="Twitter" className="touch-target w-12 h-12 rounded-full border border-gray-800 flex items-center justify-center hover:bg-[#DFFF00] hover:text-black hover:border-[#DFFF00] cursor-pointer text-gray-400 text-[10px] font-black">
                 X
               </button>
             </div>
@@ -499,9 +552,9 @@ export default function AppPage() {
                   type="email"
                   placeholder="Enter your email"
                   aria-label="Email address for newsletter"
-                  className="bg-white/5 border border-gray-800 px-4 py-3 outline-none focus:border-[#DFFF00] transition-colors duration-300 w-full text-white placeholder-gray-600 font-sans normal-case tracking-normal text-sm"
+                  className="touch-target bg-white/5 border border-gray-800 px-4 py-3 outline-none focus:border-[#DFFF00] w-full text-white placeholder-gray-600 font-sans normal-case tracking-normal text-sm"
                 />
-                <button type="button" className="btn-premium bg-[#DFFF00] text-black px-6 py-3 font-black hover:bg-white transition-colors duration-300 w-full text-xs tracking-widest">
+                <button type="button" className="btn-premium touch-target bg-[#DFFF00] text-black px-6 py-3 font-black hover:bg-white w-full text-xs tracking-widest">
                   Join the Aura
                 </button>
               </div>
