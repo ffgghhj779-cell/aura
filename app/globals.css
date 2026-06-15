@@ -1,0 +1,150 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: var(--font-display);
+  --font-sans: var(--font-sans);
+
+  --animate-marquee: marquee 35s linear infinite;
+  --animate-marquee-reverse: marquee-reverse 35s linear infinite;
+  --animate-fade-up: fade-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  --animate-pulse-soft: pulse-soft 2.5s ease-in-out infinite;
+
+  @keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  @keyframes marquee-reverse {
+    0% { transform: translateX(-50%); }
+    100% { transform: translateX(0); }
+  }
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes pulse-soft {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+  }
+}
+
+/* Base polish */
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background-color: #DFFF00;
+  color: #000000;
+}
+
+.font-display {
+  font-family: var(--font-display), system-ui, sans-serif;
+}
+
+/* Marquee — pause on hover for premium feel */
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: var(--animate-marquee);
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+.marquee-group {
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+  padding-right: 3rem;
+  flex-shrink: 0;
+}
+
+/* Premium button interactions */
+.btn-premium {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.btn-premium:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px -8px rgba(0, 0, 0, 0.35);
+}
+
+.btn-premium:active {
+  transform: translateY(0) scale(0.98);
+  box-shadow: none;
+}
+
+/* Product card shadow transition */
+.product-card {
+  transition:
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.3s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 24px 48px -16px rgba(0, 0, 0, 0.14);
+}
+
+/* Focus rings for production accessibility */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid #DFFF00;
+  outline-offset: 2px;
+}
+
+/* Scroll indicator */
+.scroll-indicator {
+  animation: var(--animate-pulse-soft);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .marquee-track,
+  .scroll-indicator {
+    animation: none;
+  }
+
+  .product-card:hover {
+    transform: none;
+  }
+
+  .btn-premium:hover {
+    transform: none;
+    box-shadow: none;
+  }
+}
+
+@media (max-width: 639px) {
+  .hero-headline {
+    font-size: clamp(2.25rem, 10vw, 3.5rem);
+  }
+
+  .quiz-headline {
+    font-size: clamp(2.75rem, 12vw, 4.5rem);
+  }
+}
