@@ -402,6 +402,23 @@ input:focus-visible {
   background: #000;
 }
 
+.hero-section__image {
+  object-fit: cover;
+  object-position: center;
+}
+
+@media (min-width: 768px) {
+  .hero-section__image {
+    object-position: top center;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero-section__image {
+    object-position: center 15%;
+  }
+}
+
 .hero-section__glow {
   position: absolute;
   inset: 0;
@@ -516,10 +533,10 @@ input:focus-visible {
 }
 
 .brand-logo--header {
-  width: auto;
-  max-width: clamp(3.75rem, 11vw, 5.25rem);
-  height: clamp(3.25rem, 10vw, 4.75rem);
-  max-height: clamp(3.25rem, 10vw, 4.75rem);
+  width: clamp(3rem, 12vw, 3.5rem);
+  height: clamp(3rem, 12vw, 3.5rem);
+  max-width: clamp(3rem, 12vw, 3.5rem);
+  max-height: clamp(3rem, 12vw, 3.5rem);
   flex-shrink: 0;
   filter: brightness(0) invert(1);
   -webkit-filter: brightness(0) invert(1);

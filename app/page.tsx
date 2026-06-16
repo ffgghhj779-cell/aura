@@ -232,7 +232,7 @@ export default function AppPage() {
                   fill
                   priority
                   sizes="100vw"
-                  className="object-cover object-center"
+                  className="hero-section__image"
                 />
                 {/* Dark gradient overlay — keeps text 100% readable */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/55 to-black/25" />
