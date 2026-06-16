@@ -2,6 +2,7 @@
 
 import { memo, useCallback, useRef, useState } from 'react';
 import { BrandLogo } from '@/components/brand-logo';
+import { SafeImage } from '@/components/safe-image';
 import { motion, AnimatePresence } from 'motion/react';
 import { Activity, BatteryCharging, Focus, Waves, ArrowRight } from 'lucide-react';
 import { SiteHeader } from '@/components/site-header';
@@ -61,7 +62,7 @@ const PRODUCT_ENGINE: Record<MoodId, MoodResult> = {
   energetic: {
     phrase: "To fuel your fire\nwithout burnout.",
     products: [
-      { name: 'Adidas Ultraboost Light — Running Shoe', desc: 'Maximum energy return for your explosive runs — Lightstrike+ cushioning and a Continental™ rubber outsole built for Saudi heat and long pavement sessions.', image: IMAGES.shoesRunningWhite, price: 'SAR 750' },
+      { name: 'Adidas Ultraboost Light — Running Shoe', desc: 'Maximum energy return for your explosive runs — Lightstrike+ cushioning and a Continental™ rubber outsole built for Saudi heat and long pavement sessions.', image: IMAGES.shoesAdidas, price: 'SAR 750' },
       { name: 'Gymshark Vital Seamless 2.0 Leggings', desc: 'Engineered for maximum breathability, four-way stretch, and sculpted support — the uniform for athletes who train with relentless intensity.', image: IMAGES.leggingsSeamless, price: 'SAR 280' },
       { name: 'Optimum Nutrition Gold Standard Whey — 2.27kg', desc: '24g of pure whey isolate per scoop for rapid post-session recovery — the world\'s best-selling protein, trusted by elite performers globally.', image: IMAGES.proteinGold, price: 'SAR 350' },
     ],
@@ -223,15 +224,24 @@ export default function AppPage() {
               className="w-full gpu-layer"
               style={{ willChange: 'transform, opacity' }}
             >
-              {/* Hero — solid premium background, no lifestyle imagery */}
+              {/* Hero — premium background image + text */}
               <div className="hero-section relative w-full flex items-center justify-center overflow-hidden">
-                <div className="hero-section__glow" aria-hidden="true" />
+                <SafeImage
+                  src={IMAGES.heroMaleAthlete}
+                  alt="Elite Saudi athlete training"
+                  fill
+                  priority
+                  sizes="100vw"
+                  className="object-cover object-center"
+                />
+                {/* Dark gradient overlay — keeps text 100% readable */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/55 to-black/25" />
+                <div className="absolute inset-0 bg-gradient-to-r from-black/30 via-transparent to-black/30" />
                 <div className="relative z-10 text-center text-white px-6 max-w-5xl mx-auto flex flex-col items-center w-full">
-                  <BrandLogo variant="hero" priority />
                   <h2 className="hero-headline font-display font-black uppercase tracking-tighter mb-6 sm:mb-8 leading-[1.05]">
                     Train Your Mind.<br className="hidden sm:block" /> Elevate Your Game.
                   </h2>
-                  <p className="text-gray-400 text-base sm:text-lg md:text-xl font-medium tracking-wide max-w-2xl mx-auto leading-[1.7]">
+                  <p className="text-gray-300 text-base sm:text-lg md:text-xl font-medium tracking-wide max-w-2xl mx-auto leading-[1.7]">
                     The first mood-intelligent gear platform for Saudi athletes — where mental frequency meets world-class equipment.
                   </p>
                 </div>

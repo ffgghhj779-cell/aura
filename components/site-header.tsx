@@ -28,14 +28,22 @@ export function SiteHeader({
   return (
     <header className="site-header sticky top-0 z-50 w-full bg-black text-white">
       <div className="max-w-7xl mx-auto section-x">
-        <div className="flex items-center justify-between min-h-[5.75rem] sm:min-h-[6.75rem] lg:min-h-[7.25rem] gap-3 sm:gap-4 py-2.5 sm:py-3">
+        <div className="flex items-center justify-between min-h-[4.5rem] sm:min-h-[5rem] lg:min-h-[5.5rem] gap-3 sm:gap-4 py-2 sm:py-2.5">
           <button
             type="button"
             onClick={() => { setMobileOpen(false); onNavigateHome(); }}
-            className="flex items-center shrink-0 text-left touch-target py-0.5 pr-1 sm:pr-2"
+            className="flex items-center gap-3 shrink-0 text-left touch-target py-1"
             aria-label="Motivation Aura home"
           >
             <BrandLogo variant="header" priority />
+            <div className="hidden sm:flex flex-col leading-none">
+              <span className="font-display font-black text-base lg:text-lg xl:text-xl uppercase tracking-[0.06em] text-white leading-tight">
+                Motivation Aura
+              </span>
+              <span className="text-[9px] xl:text-[10px] font-semibold tracking-[0.22em] uppercase text-accent-gold mt-0.5 leading-tight">
+                Mental Coach for the Saudi Athlete
+              </span>
+            </div>
           </button>
 
           <nav className="hidden lg:flex items-center gap-1 xl:gap-2" aria-label="Main categories">
