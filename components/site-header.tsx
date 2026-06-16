@@ -26,9 +26,9 @@ export function SiteHeader({
   };
 
   return (
-    <header className="site-header sticky top-0 z-50 w-full bg-black text-white border-b border-white/10">
+    <header className="site-header sticky top-0 z-50 w-full bg-black text-white">
       <div className="max-w-7xl mx-auto section-x">
-        <div className="flex items-center justify-between min-h-[5.25rem] sm:min-h-[6rem] lg:min-h-[6.5rem] gap-3 sm:gap-4 py-2 sm:py-2.5">
+        <div className="flex items-center justify-between min-h-[5.75rem] sm:min-h-[6.75rem] lg:min-h-[7.25rem] gap-3 sm:gap-4 py-2.5 sm:py-3">
           <button
             type="button"
             onClick={() => { setMobileOpen(false); onNavigateHome(); }}
@@ -44,7 +44,7 @@ export function SiteHeader({
                 key={cat.id}
                 type="button"
                 onClick={() => handleCategory(cat.id)}
-                className="nav-link touch-target px-3 xl:px-4 py-2 text-[11px] xl:text-xs font-bold uppercase tracking-[0.15em] text-gray-300 hover:text-[#DFFF00]"
+                className="nav-link touch-target px-3 xl:px-4 py-2 text-[11px] xl:text-xs font-bold uppercase tracking-[0.15em] text-gray-300 hover:text-accent-gold"
               >
                 {cat.label}
               </button>
@@ -53,7 +53,7 @@ export function SiteHeader({
             <button
               type="button"
               onClick={() => { setMobileOpen(false); onNavigateQuiz(); }}
-              className="nav-link touch-target px-3 xl:px-4 py-2 text-[11px] xl:text-xs font-black uppercase tracking-[0.15em] text-[#DFFF00]"
+              className="nav-link touch-target px-3 xl:px-4 py-2 text-[11px] xl:text-xs font-black uppercase tracking-[0.15em] text-accent-gold"
             >
               Mood Quiz
             </button>
@@ -67,7 +67,7 @@ export function SiteHeader({
             >
               <ShoppingBag className="w-6 h-6" />
               {cartCount > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 w-5 h-5 bg-[#DFFF00] text-black text-[10px] font-black rounded-full flex items-center justify-center">
+                <span className="absolute -top-0.5 -right-0.5 w-5 h-5 bg-accent-gold text-black text-[10px] font-black rounded-full flex items-center justify-center">
                   {cartCount}
                 </span>
               )}
@@ -93,7 +93,7 @@ export function SiteHeader({
                 key={cat.id}
                 type="button"
                 onClick={() => handleCategory(cat.id)}
-                className="touch-target text-left px-4 py-3 text-sm font-bold uppercase tracking-widest text-gray-200 hover:text-[#DFFF00] border-b border-white/5"
+                className="touch-target text-left px-4 py-3 text-sm font-bold uppercase tracking-widest text-gray-200 hover:text-accent-gold border-b border-white/5"
               >
                 {cat.label}
               </button>
@@ -101,7 +101,7 @@ export function SiteHeader({
             <button
               type="button"
               onClick={() => { setMobileOpen(false); onNavigateQuiz(); }}
-              className="touch-target text-left px-4 py-3 text-sm font-black uppercase tracking-widest text-[#DFFF00]"
+              className="touch-target text-left px-4 py-3 text-sm font-black uppercase tracking-widest text-accent-gold"
             >
               Mood Quiz
             </button>

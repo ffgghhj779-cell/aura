@@ -54,16 +54,16 @@ function ProductRow({
 export function HomeSections({ onNavigateCategory, onScrollToQuiz }: HomeSectionsProps) {
   return (
     <>
-      <div className="w-full bg-[#DFFF00] py-5 sm:py-6 border-y-2 border-black overflow-hidden">
+      <div className="w-full marquee-premium py-5 sm:py-6 overflow-hidden">
         <div className="marquee-track">
           {[0, 1].map((track) => (
             <div key={track} className="marquee-group">
               {TRUST_BRANDS.map((brand) => (
                 <span key={`${track}-${brand}`} className="inline-flex items-center gap-12">
-                  <span className="font-display font-black text-lg sm:text-2xl uppercase tracking-wider text-black whitespace-nowrap">
+                  <span className="marquee-premium__text font-display font-black text-lg sm:text-2xl uppercase whitespace-nowrap">
                     {brand}
                   </span>
-                  <span className="w-1.5 h-1.5 rounded-full bg-black shrink-0" aria-hidden="true" />
+                  <span className="marquee-premium__dot w-1 h-1 rounded-full shrink-0" aria-hidden="true" />
                 </span>
               ))}
             </div>
@@ -88,7 +88,7 @@ export function HomeSections({ onNavigateCategory, onScrollToQuiz }: HomeSection
       <section id="collections" className="w-full bg-black text-white section-y section-x scroll-mt-24">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-10 sm:mb-14">
-            <span className="text-[10px] font-black tracking-[0.3em] uppercase text-[#DFFF00] mb-3 block">
+            <span className="text-[10px] font-black tracking-[0.3em] uppercase text-accent-gold mb-3 block">
               Curated Edits
             </span>
             <h2 className="font-display font-black text-3xl sm:text-5xl uppercase tracking-tighter">
@@ -113,14 +113,14 @@ export function HomeSections({ onNavigateCategory, onScrollToQuiz }: HomeSection
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
                 <div className="absolute inset-0 p-6 sm:p-8 flex flex-col justify-end">
-                  <span className="text-[10px] font-black uppercase tracking-widest text-[#DFFF00] mb-2">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-accent-gold mb-2">
                     {col.productCount} Products
                   </span>
                   <h3 className="font-display font-black text-2xl sm:text-3xl uppercase tracking-tight mb-2">
                     {col.title}
                   </h3>
                   <p className="text-gray-400 text-sm font-medium mb-4">{col.subtitle}</p>
-                  <span className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-white group-hover:text-[#DFFF00]">
+                  <span className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-white group-hover:text-accent-gold transition-colors">
                     Shop Collection
                     <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </span>
@@ -136,7 +136,7 @@ export function HomeSections({ onNavigateCategory, onScrollToQuiz }: HomeSection
           <button
             type="button"
             onClick={onScrollToQuiz}
-            className="btn-premium touch-target inline-flex items-center gap-3 bg-[#DFFF00] text-black px-8 py-4 font-black uppercase text-sm tracking-widest border-2 border-black hover:bg-black hover:text-[#DFFF00]"
+            className="btn-premium touch-target inline-flex items-center gap-3 bg-black text-white px-8 py-4 font-black uppercase text-sm tracking-widest border border-accent-gold hover:bg-accent-gold hover:text-black transition-colors"
           >
             Take the Mood Quiz
             <ArrowRight className="w-5 h-5" />

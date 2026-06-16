@@ -4,6 +4,10 @@
   --font-display: var(--font-display);
   --font-sans: var(--font-sans);
 
+  --color-accent-gold: #C9A84C;
+  --color-accent-gold-light: #E8D5A3;
+  --color-accent-gold-dark: #9A7B2F;
+
   --ease-premium: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-snappy: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-touch: cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -37,7 +41,7 @@ body {
 }
 
 ::selection {
-  background-color: #DFFF00;
+  background-color: var(--color-accent-gold);
   color: #000000;
 }
 
@@ -116,7 +120,7 @@ body {
 .btn-premium__fill {
   position: absolute;
   inset: 0;
-  background: #DFFF00;
+  background: var(--color-accent-gold);
   transform: translate3d(0, 100%, 0);
   transition: transform 0.28s var(--ease-premium);
   will-change: transform;
@@ -191,7 +195,7 @@ body {
 .mood-btn__yellow {
   position: absolute;
   inset: 0;
-  background: #DFFF00;
+  background: var(--color-accent-gold);
   transform: scale3d(0, 1, 1);
   transform-origin: left center;
   transition: transform 0.45s var(--ease-premium);
@@ -244,7 +248,7 @@ body {
 .pillar-card__accent {
   position: absolute;
   inset: 0;
-  border: 1px solid rgb(223 255 0 / 0.5);
+  border: 1px solid rgb(201 168 76 / 0.45);
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.35s var(--ease-premium);
@@ -309,8 +313,102 @@ body {
 a:focus-visible,
 button:focus-visible,
 input:focus-visible {
-  outline: 2px solid #DFFF00;
+  outline: 2px solid var(--color-accent-gold);
   outline-offset: 2px;
+}
+
+/* ─── Premium accent utilities ─── */
+.text-accent-gold {
+  color: var(--color-accent-gold);
+}
+
+.bg-accent-gold {
+  background-color: var(--color-accent-gold);
+}
+
+.border-accent-gold {
+  border-color: var(--color-accent-gold);
+}
+
+/* ─── Premium product badge ─── */
+.badge-premium {
+  display: inline-block;
+  padding: 0.375rem 0.75rem;
+  font-size: 0.625rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-accent-gold);
+  background: rgb(0 0 0 / 0.72);
+  border: 1px solid rgb(201 168 76 / 0.55);
+  backdrop-filter: blur(8px);
+}
+
+/* ─── Premium cart button ─── */
+.btn-cart-premium {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
+  width: 100%;
+  min-height: 3.25rem;
+  padding: 0.875rem 1.25rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #fff;
+  background: transparent;
+  border: 1.5px solid #000;
+  transition:
+    color 0.3s var(--ease-premium),
+    background-color 0.3s var(--ease-premium),
+    border-color 0.3s var(--ease-premium),
+    transform 0.08s var(--ease-snappy);
+}
+
+.btn-cart-premium:hover,
+.btn-cart-premium:focus-visible {
+  color: #000;
+  background-color: var(--color-accent-gold);
+  border-color: var(--color-accent-gold);
+}
+
+.btn-cart-premium:active {
+  transform: scale(0.98);
+}
+
+/* ─── Premium brand marquee ─── */
+.marquee-premium {
+  background: #0a0a0a;
+  border-block: 1px solid rgb(201 168 76 / 0.2);
+}
+
+.marquee-premium__text {
+  color: var(--color-accent-gold-light);
+  letter-spacing: 0.12em;
+}
+
+.marquee-premium__dot {
+  background: var(--color-accent-gold);
+  opacity: 0.6;
+}
+
+/* ─── Hero — solid premium background ─── */
+.hero-section {
+  min-height: clamp(32rem, 85vh, 44rem);
+  padding-block: clamp(3rem, 10vw, 6rem);
+  background: #000;
+}
+
+.hero-section__glow {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 50% at 50% 35%, rgb(201 168 76 / 0.07) 0%, transparent 70%),
+    radial-gradient(ellipse 90% 60% at 50% 100%, rgb(255 255 255 / 0.03) 0%, transparent 60%);
+  pointer-events: none;
 }
 
 /* ─── Typography clamp ─── */
@@ -384,8 +482,10 @@ input:focus-visible {
 }
 
 .site-header {
-  backdrop-filter: blur(12px);
-  background: rgb(0 0 0 / 0.95);
+  backdrop-filter: blur(16px) saturate(1.2);
+  -webkit-backdrop-filter: blur(16px) saturate(1.2);
+  background: rgb(0 0 0 / 0.92);
+  border-bottom: 1px solid rgb(201 168 76 / 0.12);
 }
 
 /* ─── Filter pills ─── */
@@ -399,7 +499,7 @@ input:focus-visible {
 
 /* ─── Scroll anchor offset for sticky header ─── */
 .scroll-mt-24 {
-  scroll-margin-top: 6.75rem;
+  scroll-margin-top: 7.5rem;
 }
 
 /* ─── Official brand logo ─── */
@@ -416,27 +516,27 @@ input:focus-visible {
 }
 
 .brand-logo--header {
-  width: clamp(11rem, 38vw, 20rem);
-  max-width: min(52vw, 20rem);
+  width: clamp(14rem, 55vw, 24rem);
+  max-width: min(58vw, 24rem);
   height: auto;
-  max-height: clamp(4.5rem, 14vw, 6.75rem);
+  max-height: clamp(5.5rem, 18vw, 9rem);
 }
 
 .brand-logo--hero {
-  width: clamp(18rem, 72vw, 38rem);
-  max-width: min(92vw, 38rem);
+  width: clamp(22rem, 92vw, 44rem);
+  max-width: min(96vw, 44rem);
   height: auto;
-  max-height: clamp(14rem, 52vw, 28rem);
+  max-height: clamp(18rem, 62vw, 34rem);
   margin-inline: auto;
-  margin-bottom: clamp(2rem, 5vw, 3.5rem);
+  margin-bottom: clamp(2.5rem, 6vw, 4rem);
 }
 
 .brand-logo--footer {
-  width: clamp(14rem, 50vw, 24rem);
-  max-width: min(88vw, 24rem);
+  width: clamp(16rem, 55vw, 28rem);
+  max-width: min(90vw, 28rem);
   height: auto;
-  max-height: clamp(7rem, 22vw, 11rem);
-  margin-bottom: clamp(1.5rem, 3vw, 2.25rem);
+  max-height: clamp(8rem, 24vw, 13rem);
+  margin-bottom: clamp(1.75rem, 3.5vw, 2.5rem);
 }
 
 /* ─── Reduced motion ─── */

@@ -2,7 +2,6 @@
 
 import { memo, useCallback, useRef, useState } from 'react';
 import { BrandLogo } from '@/components/brand-logo';
-import { SafeImage } from '@/components/safe-image';
 import { motion, AnimatePresence } from 'motion/react';
 import { Activity, BatteryCharging, Focus, Waves, ArrowRight } from 'lucide-react';
 import { SiteHeader } from '@/components/site-header';
@@ -54,16 +53,16 @@ const PRODUCT_ENGINE: Record<MoodId, MoodResult> = {
   tense: {
     phrase: "To ground your energy\nand restore inner balance.",
     products: [
-      { name: 'Nike Pro Dri-FIT Crew Socks (3-Pack)', desc: 'Anatomical compression and strategic cushioning anchor every rep — engineered for athletes who need calm, grounded stability under pressure.', image: IMAGES.socks, price: 'SAR 89' },
-      { name: 'Lululemon Align™ High-Rise Legging 25"', desc: 'Buttery-soft Nulu™ fabric with a weightless second-skin feel — the gold standard for restorative movement and deep recovery sessions.', image: IMAGES.leggingsFabric, price: 'SAR 450' },
+      { name: 'Nike Pro Dri-FIT Crew Socks (3-Pack)', desc: 'Anatomical compression and strategic cushioning anchor every rep — engineered for athletes who need calm, grounded stability under pressure.', image: IMAGES.socksPack, price: 'SAR 89' },
+      { name: 'Lululemon Align™ High-Rise Legging 25"', desc: 'Buttery-soft Nulu™ fabric with a weightless second-skin feel — the gold standard for restorative movement and deep recovery sessions.', image: IMAGES.leggingsBlack, price: 'SAR 450' },
       { name: 'BSN Syntha-6 Protein Powder — 2.27kg', desc: 'Ultra-premium multi-source protein matrix with 22g per serving — rebuild depleted muscle and restore balance after high-stress training blocks.', image: IMAGES.proteinBSN, price: 'SAR 299' },
     ],
   },
   energetic: {
     phrase: "To fuel your fire\nwithout burnout.",
     products: [
-      { name: 'Adidas Ultraboost Light — Running Shoe', desc: 'Maximum energy return for your explosive runs — Lightstrike+ cushioning and a Continental™ rubber outsole built for Saudi heat and long pavement sessions.', image: IMAGES.shoesUltraboost, price: 'SAR 750' },
-      { name: 'Gymshark Vital Seamless 2.0 Leggings', desc: 'Engineered for maximum breathability, four-way stretch, and sculpted support — the uniform for athletes who train with relentless intensity.', image: IMAGES.leggingsFabric, price: 'SAR 280' },
+      { name: 'Adidas Ultraboost Light — Running Shoe', desc: 'Maximum energy return for your explosive runs — Lightstrike+ cushioning and a Continental™ rubber outsole built for Saudi heat and long pavement sessions.', image: IMAGES.shoesRunningWhite, price: 'SAR 750' },
+      { name: 'Gymshark Vital Seamless 2.0 Leggings', desc: 'Engineered for maximum breathability, four-way stretch, and sculpted support — the uniform for athletes who train with relentless intensity.', image: IMAGES.leggingsSeamless, price: 'SAR 280' },
       { name: 'Optimum Nutrition Gold Standard Whey — 2.27kg', desc: '24g of pure whey isolate per scoop for rapid post-session recovery — the world\'s best-selling protein, trusted by elite performers globally.', image: IMAGES.proteinGold, price: 'SAR 350' },
     ],
   },
@@ -78,7 +77,7 @@ const PRODUCT_ENGINE: Record<MoodId, MoodResult> = {
   tired: {
     phrase: "To honor rest as part\nof your performance.",
     products: [
-      { name: 'Nike Victori One Recovery Slides', desc: 'Cloud-like foam cushioning with a contoured footbed — immediate post-game comfort that lets your body reset between sessions.', image: IMAGES.slides, price: 'SAR 199' },
+      { name: 'Nike Victori One Recovery Slides', desc: 'Cloud-like foam cushioning with a contoured footbed — immediate post-game comfort that lets your body reset between sessions.', image: IMAGES.slidesRecovery, price: 'SAR 199' },
       { name: 'Reebok Premium Yoga Mat — 6mm', desc: 'Extra-thick, non-slip cushioning with a textured grip surface — supports deep stretching, mobility work, and intentional rest days.', image: IMAGES.yogaMat, price: 'SAR 150' },
       { name: 'TNH Sleep Support Blend — 60 Capsules', desc: 'Restorative deep-night formula with magnesium and adaptogens — engineered for central nervous system reset and true athletic recovery.', image: IMAGES.capsules, price: 'SAR 185' },
     ],
@@ -103,7 +102,7 @@ const MoodResults = memo(function MoodResults({
     >
       <div className="bg-black text-white section-x section-y w-full">
         <div className="max-w-6xl mx-auto flex flex-col items-center text-center">
-          <div className="inline-block bg-[#DFFF00] text-black px-4 py-1 font-bold text-xs sm:text-sm tracking-widest uppercase mb-6 sm:mb-8">
+          <div className="inline-block badge-premium mb-6 sm:mb-8">
             Your Rx
           </div>
           <h2 className="font-display font-black text-4xl sm:text-5xl md:text-7xl uppercase tracking-tighter leading-[1.05] whitespace-pre-line max-w-4xl mx-auto">
@@ -133,7 +132,7 @@ const MoodResults = memo(function MoodResults({
           <button
             type="button"
             onClick={onReset}
-            className="btn-premium touch-target group relative flex items-center gap-3 bg-black text-white px-8 sm:px-10 py-4 sm:py-5 font-black uppercase text-sm tracking-widest border-2 border-black hover:bg-[#DFFF00] hover:text-black"
+            className="btn-premium touch-target group relative flex items-center gap-3 bg-black text-white px-8 sm:px-10 py-4 sm:py-5 font-black uppercase text-sm tracking-widest border border-accent-gold hover:bg-accent-gold hover:text-black transition-colors"
           >
             <svg className="w-5 h-5 rotate-180 group-hover:-translate-x-1 transition-transform duration-300" style={{ transitionTimingFunction: 'cubic-bezier(0.22, 1, 0.36, 1)' }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
@@ -224,23 +223,15 @@ export default function AppPage() {
               className="w-full gpu-layer"
               style={{ willChange: 'transform, opacity' }}
             >
-              {/* Hero */}
-              <div className="relative w-full hero-min-h sm:h-[60vh] flex items-center justify-center bg-black overflow-hidden">
-                <SafeImage
-                  src={IMAGES.heroMaleAthlete}
-                  alt="Saudi athlete training at elite performance level"
-                  className="opacity-35 object-cover object-center"
-                  fill
-                  priority
-                  sizes="100vw"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/60" />
-                <div className="relative z-10 text-center text-white px-6 max-w-4xl mx-auto flex flex-col items-center">
+              {/* Hero — solid premium background, no lifestyle imagery */}
+              <div className="hero-section relative w-full flex items-center justify-center overflow-hidden">
+                <div className="hero-section__glow" aria-hidden="true" />
+                <div className="relative z-10 text-center text-white px-6 max-w-5xl mx-auto flex flex-col items-center w-full">
                   <BrandLogo variant="hero" priority />
-                  <h2 className="hero-headline font-display font-black uppercase tracking-tighter mb-5 sm:mb-6 leading-[1.05]">
+                  <h2 className="hero-headline font-display font-black uppercase tracking-tighter mb-6 sm:mb-8 leading-[1.05]">
                     Train Your Mind.<br className="hidden sm:block" /> Elevate Your Game.
                   </h2>
-                  <p className="text-gray-300 text-base sm:text-lg md:text-xl font-medium tracking-wide max-w-2xl mx-auto leading-relaxed">
+                  <p className="text-gray-400 text-base sm:text-lg md:text-xl font-medium tracking-wide max-w-2xl mx-auto leading-[1.7]">
                     The first mood-intelligent gear platform for Saudi athletes — where mental frequency meets world-class equipment.
                   </p>
                 </div>
@@ -252,14 +243,14 @@ export default function AppPage() {
               <section id="about" className="w-full bg-black text-white section-y section-x scroll-mt-24">
                 <div className="max-w-6xl mx-auto">
                   <div className="text-center mb-12 sm:mb-16">
-                    <span className="text-[10px] font-black tracking-[0.3em] uppercase text-[#DFFF00] mb-4 block">The Philosophy</span>
+                    <span className="text-[10px] font-black tracking-[0.3em] uppercase text-accent-gold mb-4 block">The Philosophy</span>
                     <h3 className="font-display font-black text-3xl sm:text-4xl md:text-5xl uppercase tracking-tighter">Performance Starts Within</h3>
                   </div>
                   <div className="flex flex-col md:grid md:grid-cols-3 stack-gap">
                     {AURA_PILLARS.map((pillar, idx) => (
                       <div key={pillar.title} className="pillar-card border border-white/10 p-6 sm:p-8">
                         <span className="pillar-card__accent" aria-hidden="true" />
-                        <span className="pillar-card__number font-display font-black text-5xl text-[#DFFF00]/20 block">0{idx + 1}</span>
+                        <span className="pillar-card__number font-display font-black text-5xl text-accent-gold/20 block">0{idx + 1}</span>
                         <h4 className="font-display font-black text-xl uppercase tracking-tight mt-4 mb-3">{pillar.title}</h4>
                         <p className="text-gray-400 text-sm leading-relaxed font-medium">{pillar.body}</p>
                       </div>
@@ -294,7 +285,7 @@ export default function AppPage() {
                 </h1>
                 <p className="mt-6 sm:mt-8 text-sm sm:text-lg font-medium text-gray-500 uppercase tracking-[0.15em] relative inline-block px-4">
                   Select your mental state
-                  <span className="absolute bottom-[-12px] left-1/2 -translate-x-1/2 w-12 h-1 bg-[#DFFF00]" />
+                  <span className="absolute bottom-[-0.75rem] left-1/2 -translate-x-1/2 w-12 h-px bg-accent-gold" />
                 </p>
                 <div className="mood-stack mt-12 sm:mt-20">
                   {MOODS.map((mood) => (

@@ -13,7 +13,7 @@ type SafeImageProps = Omit<ImageProps, 'src' | 'alt'> & {
 export function SafeImage({
   src,
   alt,
-  fallbackSrc = IMAGES.gymEmpty,
+  fallbackSrc = IMAGES.fallbackProduct,
   onError,
   ...props
 }: SafeImageProps) {

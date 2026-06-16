@@ -23,10 +23,10 @@ export function BrandLogo({
       priority={priority}
       sizes={
         variant === 'hero'
-          ? '(max-width: 640px) 320px, 640px'
+          ? '(max-width: 640px) 420px, 880px'
           : variant === 'footer'
-            ? '(max-width: 640px) 240px, 384px'
-            : '(max-width: 640px) 200px, 352px'
+            ? '(max-width: 640px) 280px, 448px'
+            : '(max-width: 640px) 240px, 384px'
       }
       className={`brand-logo brand-logo--${variant} ${className}`.trim()}
     />
