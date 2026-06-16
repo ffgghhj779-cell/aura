@@ -1,6 +1,7 @@
 'use client';
 
 import { Instagram, Twitter } from 'lucide-react';
+import { BrandLogo } from '@/components/brand-logo';
 import { NAV_CATEGORIES, PAYMENT_METHODS, type CategoryId, type InfoPageId } from '@/lib/catalog';
 
 type SiteFooterProps = {
@@ -15,16 +16,7 @@ export function SiteFooter({ onNavigateCategory, onNavigateInfo, onNavigateQuiz 
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8">
           <div className="lg:col-span-4 flex flex-col">
-            <div className="flex items-center gap-3 mb-6">
-              <svg className="w-8 h-8 text-[#DFFF00]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <circle cx="12" cy="6" r="3" />
-                <path d="M12 9v4" />
-                <path d="M9 13l3 3 3-3" />
-                <path d="M7 17l4-2 4 2" />
-                <path d="M5 21h14" />
-              </svg>
-              <span className="font-display font-black text-2xl uppercase tracking-tighter">Motivation Aura</span>
-            </div>
+            <BrandLogo variant="footer" />
             <p className="text-gray-400 text-sm font-medium leading-relaxed mb-6 max-w-sm">
               Elevating the physical and mental state of the Saudi athlete with curated premium gear tailored to your exact frequency.
             </p>

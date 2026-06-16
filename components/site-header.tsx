@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Menu, ShoppingBag, X } from 'lucide-react';
+import { BrandLogo } from '@/components/brand-logo';
 import { NAV_CATEGORIES, type CategoryId } from '@/lib/catalog';
 
 type SiteHeaderProps = {
@@ -31,24 +32,10 @@ export function SiteHeader({
           <button
             type="button"
             onClick={() => { setMobileOpen(false); onNavigateHome(); }}
-            className="flex items-center gap-3 shrink-0 text-left touch-target"
+            className="flex items-center shrink-0 text-left touch-target py-1 pr-2"
             aria-label="Motivation Aura home"
           >
-            <svg className="w-8 h-8 text-[#DFFF00] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <circle cx="12" cy="6" r="3" />
-              <path d="M12 9v4" />
-              <path d="M9 13l3 3 3-3" />
-              <path d="M7 17l4-2 4 2" />
-              <path d="M5 21h14" />
-            </svg>
-            <div className="hidden sm:flex flex-col">
-              <span className="font-display font-black text-xl lg:text-2xl tracking-tighter uppercase leading-none">
-                Motivation Aura
-              </span>
-              <span className="text-[10px] text-gray-400 font-bold tracking-widest uppercase leading-none mt-1">
-                Mental Coach For The Saudi Athlete
-              </span>
-            </div>
+            <BrandLogo variant="header" priority />
           </button>
 
           <nav className="hidden lg:flex items-center gap-1 xl:gap-2" aria-label="Main categories">

@@ -1,6 +1,7 @@
 'use client';
 
 import { memo, useCallback, useRef, useState } from 'react';
+import { BrandLogo } from '@/components/brand-logo';
 import { SafeImage } from '@/components/safe-image';
 import { motion, AnimatePresence } from 'motion/react';
 import { Activity, BatteryCharging, Focus, Waves, ArrowRight } from 'lucide-react';
@@ -234,10 +235,8 @@ export default function AppPage() {
                   sizes="100vw"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/60" />
-                <div className="relative z-10 text-center text-white px-6 max-w-4xl mx-auto">
-                  <span className="inline-block px-4 py-1.5 mb-5 sm:mb-6 text-[10px] sm:text-xs font-black tracking-[0.25em] text-black uppercase bg-[#DFFF00]">
-                    Motivation Aura
-                  </span>
+                <div className="relative z-10 text-center text-white px-6 max-w-4xl mx-auto flex flex-col items-center">
+                  <BrandLogo variant="hero" priority />
                   <h2 className="hero-headline font-display font-black uppercase tracking-tighter mb-5 sm:mb-6 leading-[1.05]">
                     Train Your Mind.<br className="hidden sm:block" /> Elevate Your Game.
                   </h2>

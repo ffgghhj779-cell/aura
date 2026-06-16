@@ -402,6 +402,36 @@ input:focus-visible {
   scroll-margin-top: 5.5rem;
 }
 
+/* ─── Official brand logo ─── */
+.brand-logo {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  object-fit: contain;
+  object-position: center;
+  image-rendering: -webkit-optimize-contrast;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.brand-logo--header {
+  max-height: clamp(2.75rem, 8vw, 3.5rem);
+  max-width: clamp(7rem, 22vw, 9.25rem);
+}
+
+.brand-logo--hero {
+  max-height: clamp(8rem, 28vw, 13rem);
+  max-width: clamp(12rem, 42vw, 20rem);
+  margin-inline: auto;
+  margin-bottom: clamp(1.25rem, 3vw, 2rem);
+}
+
+.brand-logo--footer {
+  max-height: clamp(4rem, 12vw, 5.5rem);
+  max-width: clamp(9rem, 30vw, 12.5rem);
+  margin-bottom: clamp(1rem, 2vw, 1.5rem);
+}
+
 /* ─── Reduced motion ─── */
 @media (prefers-reduced-motion: reduce) {
   html {
