@@ -28,11 +28,11 @@ export function SiteHeader({
   return (
     <header className="site-header sticky top-0 z-50 w-full bg-black text-white border-b border-white/10">
       <div className="max-w-7xl mx-auto section-x">
-        <div className="flex items-center justify-between min-h-[4.5rem] gap-4">
+        <div className="flex items-center justify-between min-h-[5.25rem] sm:min-h-[6rem] lg:min-h-[6.5rem] gap-3 sm:gap-4 py-2 sm:py-2.5">
           <button
             type="button"
             onClick={() => { setMobileOpen(false); onNavigateHome(); }}
-            className="flex items-center shrink-0 text-left touch-target py-1 pr-2"
+            className="flex items-center shrink-0 text-left touch-target py-0.5 pr-1 sm:pr-2"
             aria-label="Motivation Aura home"
           >
             <BrandLogo variant="header" priority />
