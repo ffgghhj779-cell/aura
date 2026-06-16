@@ -32,16 +32,16 @@ export function SiteHeader({
           <button
             type="button"
             onClick={() => { setMobileOpen(false); onNavigateHome(); }}
-            className="flex items-center gap-3 shrink-0 text-left touch-target py-1"
+            className="header-brand touch-target shrink-0 text-left py-1"
             aria-label="Motivation Aura home"
           >
             <BrandLogo variant="header" priority />
-            <div className="hidden sm:flex flex-col leading-none">
-              <span className="font-display font-black text-base lg:text-lg xl:text-xl uppercase tracking-[0.06em] text-white leading-tight">
+            <div className="header-brand__text flex flex-col leading-none min-w-0">
+              <span className="header-brand__name font-display font-black uppercase tracking-[0.08em] leading-tight">
                 Motivation Aura
               </span>
-              <span className="text-[9px] xl:text-[10px] font-semibold tracking-[0.22em] uppercase text-accent-gold mt-0.5 leading-tight">
-                Mental Coach for the Saudi Athlete
+              <span className="header-brand__slogan font-medium uppercase tracking-[0.2em] leading-tight">
+                Mental Edge for the Athlete
               </span>
             </div>
           </button>

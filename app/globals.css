@@ -517,10 +517,34 @@ input:focus-visible {
 
 .brand-logo--header {
   width: auto;
-  max-width: clamp(3.5rem, 12vw, 5.5rem);
-  height: clamp(3rem, 10vw, 4.75rem);
-  max-height: clamp(3rem, 10vw, 4.75rem);
+  max-width: clamp(3.75rem, 11vw, 5.25rem);
+  height: clamp(3.25rem, 10vw, 4.75rem);
+  max-height: clamp(3.25rem, 10vw, 4.75rem);
   flex-shrink: 0;
+  filter: brightness(0) invert(1);
+  -webkit-filter: brightness(0) invert(1);
+}
+
+/* ─── Header brand lockup (logo + name + slogan) ─── */
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.625rem, 2.5vw, 0.875rem);
+}
+
+.header-brand__text {
+  gap: 0.25rem;
+}
+
+.header-brand__name {
+  color: #ffffff;
+  font-size: clamp(0.8125rem, 2.8vw, 1.25rem);
+}
+
+.header-brand__slogan {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: clamp(0.5rem, 1.6vw, 0.625rem);
+  margin-top: 0.125rem;
 }
 
 .brand-logo--hero {
